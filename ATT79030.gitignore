@@ -1,0 +1,15 @@
+*.classes
+*.jpr
+*.jws
+*.jar
+*.library
+*.zip
+*.war
+classes
+.data
+.adf
+.designer
+.rulesdesigner
+SCA-INF
+WEB-INF
+VFIDM/Test
