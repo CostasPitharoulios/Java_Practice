@@ -9,6 +9,8 @@ public class StringManipulation {
         super();
     }
     
+    //Geia sou Konstantine !!
+    
     // We are going to use sets.
         // The idea is that all items of a set are unique.
         // Therefore, we are going to transform the string to a set.
