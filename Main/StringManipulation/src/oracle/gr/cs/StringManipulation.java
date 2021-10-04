@@ -167,5 +167,6 @@ public class StringManipulation {
         //          *** TASK 5 ***
         //============================================
         System.out.println("TASK 5:\n-------");
-        Boolean.parseBoolean("true") == true; 
+    }
+       
 }
