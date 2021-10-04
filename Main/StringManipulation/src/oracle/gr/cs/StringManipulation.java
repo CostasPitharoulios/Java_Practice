@@ -9,47 +9,42 @@ public class StringManipulation {
         super();
     }
 
-    // Geia sou Konstantine !!
-
-    // We are going to use sets.
-    // The idea is that all items of a set are unique.
-    // Therefore, we are going to transform the string to a set.
-    // If the length of the set equals the length of the string,
-    // then all string's characters are unique.
 
     /**
      * We are going to use sets.
-     *    The idea is that all items of a set are unique.
-     *    Therefore, we are going to transform the string to a set.
-     *    If the length of the set equals the length of the string,
-     *    then all string's characters are unique.
-     *    
+     * The idea is that all items of a set are unique.
+     * Therefore, we are going to transform the string to a set.
+     * If the length of the set equals the length of the string,
+     * then all string's characters are unique.
      * @param str the input string of the method
-     * @return true if all characters unique , false if not
+     * @return true if all characters unique, false if not
      */
     public static boolean uniqueCharacters(String str) {
-
+        boolean ret = false;
         HashSet<Character> characterSet = new HashSet<>();
 
         for (int i = 0; i < str.length(); i++) { // For each character of the string
             characterSet.add(str.charAt(i)); // add the character to the set
-
-
         }
 
         if (characterSet.size() == str.length()) // The characters are all unique
-            return true;
-        else
-            return false; // One or more of the characters is repeated
+            ret = true;
+        
+        return ret;
     }
 
+
+  
     private static String replaceSpacesWith20s(String str) {
         String newString = str.replaceAll(" ", "%20");
         return newString;
     }
 
-    // We are going to create a Hashmap. The key will be each character
-    // of the string and the value will be its occurence
+    /**
+     * We are going to create a Hashmap. The key will be each character
+     * of the string and the value will be its occurence
+     * @param str
+     */
     private static void countCharacterOccurence(String str) {
 
         HashMap<Character, Integer> characterMap = new HashMap<Character, Integer>(); // Creating the hash map
