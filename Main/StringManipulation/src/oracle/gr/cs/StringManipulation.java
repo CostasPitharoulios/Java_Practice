@@ -89,7 +89,8 @@ public class StringManipulation {
 
         System.out.println("TASK 1:\n-------");
 
-        String input = "abcdA";
+     //   String input = "abcdA";
+          String input = null;  //Check for null pointer exception!
 
         if (uniqueCharacters(input))
             System.out.println("All characters for string " + input + " are unique.\n");
