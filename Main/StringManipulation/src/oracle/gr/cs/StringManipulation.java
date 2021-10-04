@@ -21,8 +21,13 @@ public class StringManipulation {
      */
     public static boolean uniqueCharacters(String str) {
         boolean ret = false;
+        
+        if (str ==null || str.isEmpty()){
+            return ret;
+        }
+        
         HashSet<Character> characterSet = new HashSet<>();
-
+        
         for (int i = 0; i < str.length(); i++) { // For each character of the string
             characterSet.add(str.charAt(i)); // add the character to the set
         }
@@ -36,7 +41,14 @@ public class StringManipulation {
 
   
     private static String replaceSpacesWith20s(String str) {
-        String newString = str.replaceAll(" ", "%20");
+        
+        String newString = null;
+        
+        if (str ==null || str.isEmpty()){
+            return newString;
+        }
+        
+        newString = str.replaceAll(" ", "%20");
         return newString;
     }
 
@@ -46,8 +58,15 @@ public class StringManipulation {
      * @param str
      */
     private static void countCharacterOccurence(String str) {
+        
+        if (str == null || str.isEmpty() ){    
+            System.out.println("The given string is null or empty." + "\n");
+            return;
+        }
 
         HashMap<Character, Integer> characterMap = new HashMap<Character, Integer>(); // Creating the hash map
+
+        str = str.toLowerCase(); // Making string lower case only
 
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
@@ -66,6 +85,19 @@ public class StringManipulation {
         System.out.println("");
 
 
+    }
+    
+    private static boolean assertIsTrue(String str){
+        boolean isTrue=false;
+        
+        if (str == null || str.isEmpty()){
+            System.out.println("The given strig is either null or empty.");
+        }
+        
+        if (str.equals("1") || str.equals("yes") || str.equals("true"))
+            isTrue = true;
+        
+        return isTrue;
     }
 
 
@@ -95,7 +127,7 @@ public class StringManipulation {
         if (uniqueCharacters(input))
             System.out.println("All characters for string " + input + " are unique.\n");
         else
-            System.out.println("NOT all characters for string " + input + " are unique.\n");
+            System.out.println("NOT all characters for string " + input + " are unique or the given string was null.\n");
 
         //============================================
         //          *** TASK 2 ***
@@ -103,10 +135,14 @@ public class StringManipulation {
 
         System.out.println("TASK 2:\n-------");
 
-        input = "Hello World of Oracle.";
+        //input = "Hello World of Oracle.";
+        input = null;
 
         String newString = replaceSpacesWith20s(input);
-        System.out.println("Transformed " + input + " into:\n" + newString + "\n");
+        if (newString != null)
+            System.out.println("Transformed " + input + " into:\n" + newString + "\n");
+        else
+            System.out.println("The string was null" + "\n");
 
         //============================================
         //          *** TASK 3 ***
@@ -114,9 +150,22 @@ public class StringManipulation {
         System.out.println("TASK 3:\n-------");
 
 
-        input = "dabaaccdc";
+        input = "dabaaccdcAA";
+        //input = "";
         System.out.println("Input string: " + input);
         countCharacterOccurence(input);
-
-    }
+        System.out.println("");
+        
+        //============================================
+        //          *** TASK 4 ***
+        //============================================
+        System.out.println("TASK 4:\n-------");
+        
+        System.out.println("Value of isTrue: " + assertIsTrue("1") + "\n");
+        
+        //============================================
+        //          *** TASK 5 ***
+        //============================================
+        System.out.println("TASK 5:\n-------");
+        Boolean.parseBoolean("true") == true; 
 }
