@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 
+
+
 public class StringManipulation {
     public StringManipulation() {
         super();
@@ -167,6 +169,21 @@ public class StringManipulation {
         //          *** TASK 5 ***
         //============================================
         System.out.println("TASK 5:\n-------");
+        
+        // Creating an instance of BooleanEquality class and calling a 
+        // method to check the given various cases.
+        BooleanEquality beq = new BooleanEquality();
+        beq.booleanChecks();
+        
+        //============================================
+        //          *** TASK 6 ***
+        //============================================
+        System.out.println("TASK 6:\n-------");
+        
+        // Creating an instance of BooleanEquality class and calling a 
+        // method to check the given various cases.
+        StringEquality steq = new StringEquality();
+        steq.stringChecks();
     }
        
 }
