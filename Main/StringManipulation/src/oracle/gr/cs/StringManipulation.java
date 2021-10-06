@@ -184,6 +184,15 @@ public class StringManipulation {
         // method to check the given various cases.
         StringEquality steq = new StringEquality();
         steq.stringChecks();
+        
+        //============================================
+        //          *** TASK 7 ***
+        //============================================
+        System.out.println("TASK 7:\n-------");
+        
+        String str1 = "Oracle";
+        String str2 = "Oracle";
+        steq.lexicographicalComparison(str1, str2);
     }
        
 }
