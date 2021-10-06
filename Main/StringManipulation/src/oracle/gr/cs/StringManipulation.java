@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 
-
-
 public class StringManipulation {
     public StringManipulation() {
         super();
@@ -193,6 +191,18 @@ public class StringManipulation {
         String str1 = "Oracle";
         String str2 = "Oracle";
         steq.lexicographicalComparison(str1, str2);
+    
+    
+    //============================================
+    //          *** TASK 8 ***
+    // (timestamp)
+    //============================================
+    System.out.println("TASK 8:\n-------");
+    
+    
+    //DateAndTimeHandling dt = new DateAndTimeHandling();
+    
+    
     }
        
 }
