@@ -2,6 +2,7 @@ package oracle.gr.cs;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
@@ -9,8 +10,13 @@ public class DateAndTimeHandling {
     public DateAndTimeHandling() {
         super();
     }
-    
-    
+
+
+    /**
+     * please return here a LocalDateTime object instead of a String 
+     * @param timeStamp
+     * @return
+     */
     private static String timeStampToLocalDate(String timeStamp){
         
         if (timeStamp == null || timeStamp.isEmpty() || timeStamp.length()<10 ){
