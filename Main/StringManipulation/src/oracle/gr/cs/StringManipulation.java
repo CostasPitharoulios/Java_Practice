@@ -190,7 +190,16 @@ public class StringManipulation {
         
         String str1 = "Oracle";
         String str2 = "Oracle";
-        steq.lexicographicalComparison(str1, str2);
+        
+        if ((str1==null || str1.isEmpty()) || (str2==null || str2.isEmpty())){
+            System.out.println("One or both strings are either null or empty.");
+        }       
+        else if (steq.lexicographicalComparison(str1, str2)){
+            System.out.println("The strings: " + str1 + " and " + str2 + " are equal.\n");
+        }
+        else{
+            System.out.println("The strings: " + str1 + " and " + str2 + " are NOT equal.\n");
+        }
     
     
     //============================================

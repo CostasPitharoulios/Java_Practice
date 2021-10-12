@@ -6,23 +6,28 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+import java.util.TimeZone;
+
 public class DateAndTimeHandling {
     public DateAndTimeHandling() {
         super();
     }
 
 
-    /**
-     * please return here a LocalDateTime object instead of a String 
-     * @param timeStamp
-     * @return
-     */
-    private static String timeStampToLocalDate(String timeStamp){
+    /** This function gets a unix timestamp and returns a LocalDateTime object.
+     * At first, we convert the given string to a long.
+     * and then we make the conversion.
+    * @param timeStamp This is a unix timestamp
+    * @return LocalDateTime returns a LocalDateTime object
+    */
+    private static LocalDateTime timeStampToLocalDate(String timeStamp){
         
         if (timeStamp == null || timeStamp.isEmpty() || timeStamp.length()<10 ){
             System.out.println("ERROR: The given string is either null or empty or has less than 10 digits.\n");
             return null;
         }
+        
+        /*
         String localDate = null;
         
         // Unix timestamp is a 10-digit number
@@ -37,16 +42,30 @@ public class DateAndTimeHandling {
         
         localDate = Instant.ofEpochSecond(unixTimeStamp).atZone(ZoneId.of("GMT+3")).format(formatter);
         
-        return localDate;
+        return localDate;*/
+        
+        
+        final long unixTimeStamp = Long.valueOf(timeStamp).longValue(); // converting timestap string to long
+        
+        LocalDateTime localDateAndTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(unixTimeStamp), TimeZone.getDefault().toZoneId());
+        
+        return localDateAndTime;
     }
     
     
     public static void main(String args[]) {
         
-        String localDate = timeStampToLocalDate("1592813538000");
+        LocalDateTime localDateAndTime = timeStampToLocalDate("1592813538000");
         
-        if (localDate != null)
-            System.out.println(localDate);
+        
+        if (localDateAndTime != null){
+            System.out.println(localDateAndTime);
+            
+        }
+        else{
+            System.out.println("ERROR: The date return value is not correct.");
+        }
+             
     }
     
     

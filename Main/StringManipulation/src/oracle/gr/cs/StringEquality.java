@@ -52,21 +52,19 @@ public class StringEquality {
         
     }
     
-    public static void lexicographicalComparison(String str1, String str2){
+    public static boolean lexicographicalComparison(String str1, String str2){
         
-        if ((str1==null || str1.isEmpty()) || (str2==null || str2.isEmpty())){
-            System.out.println("One or both strings are either null or empty.");
-            return;
-        }
-        
+        boolean isEqual = false;        
+    
         if ((str1.compareTo(str2) == 0)){ // strings are equal
-            System.out.println("The strings: " + str1 + " and " + str2 + " are equal.\n");
+            //System.out.println("The strings: " + str1 + " and " + str2 + " are equal.\n");
+            isEqual = true;
         }
-        else{
+        /*else{
             System.out.println("The strings: " + str1 + " and " + str2 + " are NOT equal.\n");
-        }
+        }*/
         
-        return;
+        return isEqual;
     }
     
     
