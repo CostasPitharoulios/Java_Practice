@@ -14,8 +14,7 @@ public class ConnectionUtilities {
     }
 
    // *** ENTER SECRET CODE HERE *** //
-   
-   
+
   
     // *** END OF SECRET CODE HERE ***//
 

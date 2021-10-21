@@ -49,14 +49,14 @@ public class JdbcMainClass {
 
     public static void main(String args[]) throws SQLException {
         
+        Connection conn=null;
+        ConnectionUtilities myConnection = new ConnectionUtilities();
+       
         try{
 
-            ConnectionUtilities myConnection = new ConnectionUtilities();
-    
             // Establishing a new connection with the DB
-            Connection conn = myConnection.getDBConnection();
-            
-            
+            conn = myConnection.getDBConnection();
+                   
             // Checking isConnectionValid method
             if (myConnection.isConnectionValid(conn)){
                 System.out.println("The connection is valid.\n");
@@ -71,11 +71,14 @@ public class JdbcMainClass {
             idSet.forEach( (n) -> System.out.println("Employee id: " + n )); // Using Java Lambda Expressions
     
             // Closing connection
-            myConnection.closeConnection(rset, pstmt, conn);
+            
         }
         catch (SQLException e){
             System.out.println("An exception was caught.");
-            e.printStackTrace();
+            e.printStackTrace();     
+        }
+        finally{
+            myConnection.closeConnection(rset, pstmt, conn);
         }
 
     }
