@@ -27,44 +27,56 @@ public class JdbcMainClass {
      */
     public static HashSet<String> getIdSet(Connection conn) throws SQLException{
 
-
-        pstmt = conn.prepareStatement(QUERY);
-        rset = pstmt.executeQuery();
-
-        // Creating a hashset to store all employee ids
-        HashSet<String> idSet = new HashSet<String>();
-
-
-        while (rset.next()){
-            idSet.add(rset.getString("EMPLID"));
+        try{
+            pstmt = conn.prepareStatement(QUERY);
+            rset = pstmt.executeQuery();
+    
+            // Creating a hashset to store all employee ids
+            HashSet<String> idSet = new HashSet<String>();
+    
+    
+            while (rset.next()){
+                idSet.add(rset.getString("EMPLID"));
+            }
+    
+            return idSet;
         }
-
-        return idSet;
+        catch(SQLException se){
+            throw se;
+        }
     }
 
 
     public static void main(String args[]) throws SQLException {
+        
+        try{
 
-        ConnectionUtilities myConnection = new ConnectionUtilities();
-
-        // Establishing a new connection with the DB
-        Connection conn = myConnection.getDBConnection();
-
-        // Checking isConnectionValid method
-        if (myConnection.isConnectionValid(conn)){
-            System.out.println("The connection is valid.\n");
+            ConnectionUtilities myConnection = new ConnectionUtilities();
+    
+            // Establishing a new connection with the DB
+            Connection conn = myConnection.getDBConnection();
+            
+            
+            // Checking isConnectionValid method
+            if (myConnection.isConnectionValid(conn)){
+                System.out.println("The connection is valid.\n");
+            }
+            else{
+                System.out.println("The connection is NOT valid.\n");
+            }
+    
+            // Getting a set of employee ids and printing its content
+            //System.out.println(getIdSet(conn));
+            HashSet<String> idSet = getIdSet(conn);
+            idSet.forEach( (n) -> System.out.println("Employee id: " + n )); // Using Java Lambda Expressions
+    
+            // Closing connection
+            myConnection.closeConnection(rset, pstmt, conn);
         }
-        else{
-            System.out.println("The connection is NOT valid.\n");
+        catch (SQLException e){
+            System.out.println("An exception was caught.");
+            e.printStackTrace();
         }
-
-        // Getting a set of employee ids and printing its content
-        //System.out.println(getIdSet(conn));
-        HashSet<String> idSet = getIdSet(conn);
-        idSet.forEach( (n) -> System.out.println("Employee id: " + n )); // Using Java Lambda Expressions
-
-        // Closing connection
-        myConnection.closeConnection(rset, pstmt, conn);
 
     }
 }

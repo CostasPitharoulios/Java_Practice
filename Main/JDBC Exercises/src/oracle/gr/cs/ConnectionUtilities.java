@@ -14,7 +14,20 @@ public class ConnectionUtilities {
     }
 
    // *** ENTER SECRET CODE HERE *** //
+   
+   
   
+    // *** END OF SECRET CODE HERE ***//
+
+    public Connection getDBConnection() throws SQLException{
+        OracleDataSource ds;
+        ds = new OracleDataSource();
+        ds.setURL(jdbcUrl);
+        
+        conn = ds.getConnection(userid,password);
+        
+        return conn;
+    }
 
     public boolean isConnectionValid(Connection conn) throws SQLException {
         boolean isValid = false;
@@ -56,28 +69,40 @@ public class ConnectionUtilities {
             if (rset != null){
                 rset.close();
             }
-        } catch(SQLException e) {}                                                            
+        } 
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }                                                            
     }
 
     private static void closePreparedStatement(PreparedStatement pstmt) {
        try {
           if (pstmt != null)
             pstmt.close();
-       } catch (SQLException e) { }
+       }
+       catch (SQLException e) { 
+           System.out.println(e.getMessage());
+        }
     }
 
     private static void closeCallableStatement(CallableStatement cstmt){
         try {
            if (cstmt != null)
              cstmt.close();
-        } catch (SQLException e) { }
+        } 
+        catch (SQLException e) { 
+            System.out.println(e.getMessage());
+        }
     }
 
     private static void closeConnection(Connection conn) {
        try {
           if (conn != null)
              conn.close();
-       } catch (SQLException e) { }
+       } 
+       catch (SQLException e) {
+           System.out.println(e.getMessage());
+        }
     }
 
 
