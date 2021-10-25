@@ -7,7 +7,10 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 
 public class JdbcMainClass {
@@ -34,20 +37,9 @@ public class JdbcMainClass {
                                                   "              FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " + 
                                                   "             WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " + 
                                                   "                   AND " + 
-                                                  "            JOBCODE_DESCR='ΥΠΑΛΛΗΛΟΣ')";
+                                                  "             TJ.JOBCODE_DESCR='ΥΠΑΛΛΗΛΟΣ')";
 
-    /*                                        
-    private static final String QUERY_3 = "SELECT * " + 
-                                                
-                                          "FROM TEST_EMPLOYEE " + 
-                                               
-                                          "WHERE " + 
-                                                " EMPLID IN (SELECT EMPLID " + 
-                                                "              FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " + 
-                                                "             WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " + 
-                                                "                   AND " + 
-                                                "                   TE.JOBCODE_NUMBER='10') ";
-               */                     
+    private static final String QUERY_4 = "SELECT * FROM TEST_EMPLOYEE";
        
     /** This function prepares a statement for a query and returns a hashset of employee ids
      * @param conn is the connection
@@ -122,6 +114,37 @@ public class JdbcMainClass {
         }
     
     }
+    
+    public static List<Employee> createListOfEmployees(Connection conn, String QUERY_4) throws SQLException{
+        
+        // Creating a list to store all employees
+        List<Employee> listOfEmployees = new ArrayList<Employee>();
+        
+        try{
+            pstmt = conn.prepareStatement(QUERY_4);
+            rset = pstmt.executeQuery();
+            
+            // For each one of the employees in the database
+            while (rset.next()){
+                
+                // Creating a new Employee object containing all employee's information
+                Employee newEmployee = new Employee(rset.getString(1), rset.getString(2), rset.getString(3), rset.getString(4),  rset.getString(5), rset.getString(6),  rset.getString(7),  rset.getString(8), rset.getString(9),  rset.getString(10),  rset.getString(11), rset.getTimestamp(12),  rset.getTimestamp(13),  rset.getString(14));
+            
+                // Adding Employee object to the list of employees
+                listOfEmployees.add(newEmployee);
+            }
+        }
+        
+        catch(SQLException se){
+            throw se;
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return listOfEmployees;
+    }
 
 
     public static void main(String args[]) throws SQLException {
@@ -145,6 +168,7 @@ public class JdbcMainClass {
             // ======================================================
             // *** ERWTHMA 1 ***
             // ======================================================
+            System.out.println("ANSWER TO ERWTHMA 1: ");
     
             // Getting a set of employee ids and printing its content
             //System.out.println(getIdSet(conn));
@@ -154,15 +178,26 @@ public class JdbcMainClass {
             // ======================================================
             // *** ERWTHMA 2 ***
             // ======================================================
+            System.out.println("\nANSWER TO ERWTHMA 2: ");
             printQueryResultTable(conn, QUERY_2);
             
             // ======================================================
             // *** ERWTHMA 3 ***
             // ======================================================
+            System.out.println("\nANSWER TO ERWTHMA 3: ");
             updateEmployeeMobile(conn, QUERY_3);
             printQueryResultTable(conn, QUERY_2);
             
             
+            // ======================================================
+            // *** ERWTHMA 4 & 5 ***
+            // ======================================================
+            System.out.println("\nANSWER TO ERWTHMA 4&5: ");
+            List<Employee> listOfAllEmployees = createListOfEmployees(conn, QUERY_4);
+            
+            // Going to print out all employees list
+            System.out.println(Arrays.toString(listOfAllEmployees.toArray()));
+
         }
         catch (SQLException e){
             System.out.println("An exception was caught.");
