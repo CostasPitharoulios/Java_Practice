@@ -3,13 +3,11 @@ package oracle.gr.cs;
 import java.text.SimpleDateFormat;
 
 import java.time.LocalDateTime;
+
 import java.sql.Timestamp;
 
 public class Employee {
-    public Employee() {
-        super();
-    }
-
+   
     private String EMPLID;
     private String FIRST_NAME;
     private String LAST_NAME;
@@ -29,11 +27,11 @@ public class Employee {
         /*
         String hireDateSmall = null;
         if (HIRE_DATE != null){
-        
+
             int yearHire = this.HIRE_DATE.getYear();
             int monthHire = this.HIRE_DATE.getMonth();
             int dayHire = this.HIRE_DATE.getDay();
-            
+
             hireDateSmall =  dayHire + "/" + monthHire + "/" + yearHire;
         }
 
@@ -51,6 +49,7 @@ public class Employee {
 
 
     //==================================================================================
+
     /** This function compares an Employee with another.
      * @param e is an object employee that we want to compare
      * @return areEqual=true if the employees have the same EMP_ID. In any other case areEqual=false is returned.
@@ -86,43 +85,53 @@ public class Employee {
         return areEqual;
     }
     //-----------------------------------------------------------------------------------
-    
+
     //==================================================================================
     // *** CONSTRUCTORS ***
     //-----------------------------------------------------------------------------------
-    public Employee(String EMPLID, String FIRST_NAME, String LAST_NAME, String FIRST_NAME_EN, String LAST_NAME_EN, String FATHER_NAME, String MOBILE, String STATUS, String JOBCODE_NUMBER, String DEPTID, String MANAGER_ID, Timestamp HIRE_DATE, Timestamp END_DATE, String EMP_TYPE) {
-            
-            SimpleDateFormat formatter=new SimpleDateFormat("dd/MMM/yyyy");  
-            
-            this.EMPLID = EMPLID;
-            this.FIRST_NAME = FIRST_NAME;
-            this.LAST_NAME = LAST_NAME;
-            this.FIRST_NAME_EN = FIRST_NAME_EN;
-            this.LAST_NAME_EN = LAST_NAME_EN;
-            this.FATHER_NAME = FATHER_NAME;
-            this.MOBILE = MOBILE;
-            this.STATUS = STATUS;
-            this.JOBCODE_NUMBER = JOBCODE_NUMBER;
-            this.DEPTID = DEPTID;
-            this.MANAGER_ID = MANAGER_ID;
-            
-            if (HIRE_DATE != null){
-                this.HIRE_DATE = HIRE_DATE.toLocalDateTime();
-            }else{
-                this.HIRE_DATE = null;
-            }
-            
-            if (END_DATE != null){
-                this.END_DATE = END_DATE.toLocalDateTime();
-            }else{
-                this.END_DATE = null;
-            }
-            
-            this.EMP_TYPE = EMP_TYPE;
+    public Employee() {
+        this(null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    }
+    
+    public Employee(String EMPLID, String JOBCODE_NUMBER, String DEPTID){
+        this(EMPLID, null, null, null, null, null, null, null,JOBCODE_NUMBER, DEPTID, null, null, null, null );
+    }
+    
+    public Employee(String EMPLID, String FIRST_NAME, String LAST_NAME, String FIRST_NAME_EN, String LAST_NAME_EN,
+                    String FATHER_NAME, String MOBILE, String STATUS, String JOBCODE_NUMBER, String DEPTID,
+                    String MANAGER_ID, Timestamp HIRE_DATE, Timestamp END_DATE, String EMP_TYPE) {
+
+        this.EMPLID = EMPLID;
+        this.FIRST_NAME = FIRST_NAME;
+        this.LAST_NAME = LAST_NAME;
+        this.FIRST_NAME_EN = FIRST_NAME_EN;
+        this.LAST_NAME_EN = LAST_NAME_EN;
+        this.FATHER_NAME = FATHER_NAME;
+        this.MOBILE = MOBILE;
+        this.STATUS = STATUS;
+        this.JOBCODE_NUMBER = JOBCODE_NUMBER;
+        this.DEPTID = DEPTID;
+        this.MANAGER_ID = MANAGER_ID;
+
+        if (HIRE_DATE != null) {
+            this.HIRE_DATE = HIRE_DATE.toLocalDateTime();
+        } else {
+            this.HIRE_DATE = null;
         }
+
+        if (END_DATE != null) {
+            this.END_DATE = END_DATE.toLocalDateTime();
+        } else {
+            this.END_DATE = null;
+        }
+
+        this.EMP_TYPE = EMP_TYPE;
+    }
+
+   
     //-----------------------------------------------------------------------------------
 
-    
+
     //==================================================================================
     // *** GETTERS AND SETTERS ***
     //-----------------------------------------------------------------------------------

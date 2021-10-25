@@ -197,7 +197,20 @@ public class JdbcMainClass {
             
             // Going to print out all employees list
             System.out.println(Arrays.toString(listOfAllEmployees.toArray()));
-
+            
+            // ======================================================
+            // *** ERWTHMA 6 ***
+            // ======================================================
+            System.out.println("\nANSWER TO ERWTHMA 6: ");
+            Employee newEmployee = new Employee("005", "11", "3504");
+            
+            // Adding new Employee object to the list of all employees
+            listOfAllEmployees.add(newEmployee);
+            
+            // Going to print out all employees list
+            System.out.println(Arrays.toString(listOfAllEmployees.toArray()));
+            
+           
         }
         catch (SQLException e){
             System.out.println("An exception was caught.");
