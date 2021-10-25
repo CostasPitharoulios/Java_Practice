@@ -146,6 +146,32 @@ public class JdbcMainClass {
         return listOfEmployees;
     }
 
+    
+    public static void insertPartialEmployeeToTable(Connection conn, Employee emp) throws SQLException{
+        
+        String QUERY = "INSERT INTO TEST_EMPLOYEE (EMPLID, JOBCODE_NUMBER, DEPTID)" + 
+                       "VALUES ('" + emp.getEMPLID() + "','" + emp.getJOBCODE_NUMBER()+
+                       "','" + emp.getDEPTID() + "')";
+        
+                          // In case we want to insert all info of an employee
+                          /* "VALUES ('"+ emp.getEMPLID() + "','" + emp.getFIRST_NAME() +"','" + emp.getLAST_NAME() +
+                       "','" + emp.getFIRST_NAME_EN() + "','" + emp.getLAST_NAME_EN() + "','" + emp.getFATHER_NAME() +
+                       "','" + emp.getMOBILE() + "','" + emp.getSTATUS() + "','" + emp.getJOBCODE_NUMBER()+
+                       "','" + emp.getDEPTID() + "','" + emp.getMANAGER_ID() + "','" + emp.getHIRE_DATE() +
+                       "','" + emp.getEND_DATE() + "','" + emp.getEMP_TYPE()  + "')";*/
+                       
+        
+        System.out.println("INSERT QUERY: " + QUERY + "\n");
+        
+        try{
+            pstmt = conn.prepareStatement(QUERY);
+            pstmt.executeUpdate();
+        }
+        catch(SQLException se){
+            throw se;
+        }
+        
+    }
 
     public static void main(String args[]) throws SQLException {
         
@@ -192,6 +218,7 @@ public class JdbcMainClass {
             // ======================================================
             // *** ERWTHMA 4 & 5 ***
             // ======================================================
+            
             System.out.println("\nANSWER TO ERWTHMA 4&5: ");
             List<Employee> listOfAllEmployees = createListOfEmployees(conn, QUERY_4);
             
@@ -202,10 +229,15 @@ public class JdbcMainClass {
             // *** ERWTHMA 6 ***
             // ======================================================
             System.out.println("\nANSWER TO ERWTHMA 6: ");
-            Employee newEmployee = new Employee("005", "11", "3504");
+            Employee newEmployee = new Employee("0005", "11", "3504");
             
-            // Adding new Employee object to the list of all employees
-            listOfAllEmployees.add(newEmployee);
+            // Updating BD Employee Table
+            insertPartialEmployeeToTable(conn, newEmployee);
+            
+            // Creating a list with all the employees just to make sure
+            // that the update was successful.
+            System.out.println("\nANSWER TO ERWTHMA 4&5: ");
+            listOfAllEmployees = createListOfEmployees(conn, QUERY_4);
             
             // Going to print out all employees list
             System.out.println(Arrays.toString(listOfAllEmployees.toArray()));
