@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.sql.Timestamp;
 
-import java.util.Date;
-
 public class Employee {
     public Employee() {
         super();
