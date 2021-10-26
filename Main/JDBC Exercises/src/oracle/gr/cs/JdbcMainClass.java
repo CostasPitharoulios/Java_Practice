@@ -173,6 +173,156 @@ public class JdbcMainClass {
         
     }
 
+    /** This method checks if there are more than two managers. If yes, it finds the manager who
+     * has subordinates, moves all his subordinates to the other manager and then deletes him. 
+     * @param conn is the connection with the DB
+     * @throws SQLException
+     */
+    public static void replaceManager(Connection conn) throws SQLException{
+        
+        // This query gives as the sum of all employees whose job description
+        // contains the word "Manager"
+        String sumOfManagersQUERY = "SELECT COUNT(EMPLID) AS SUMOFMANAGERS " +
+                         "FROM " +
+                                "(SELECT * "  +
+                                "    FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " + 
+                                "   WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " +
+                                "         AND " +
+                                "         TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥΘΥΝΤΗΣ%') ";
+                       
+        
+        //System.out.println("INSERT QUERY: " + sumOfManagersQUERY + "\n");
+
+        try{
+            pstmt = conn.prepareStatement(sumOfManagersQUERY);
+            rset = pstmt.executeQuery();
+            
+            int sumOfManagers = -1;
+            while (rset.next()){
+                sumOfManagers = rset.getInt(1);
+            }
+            
+            System.out.println("NUMBER OF MANAGERS: " + sumOfManagers);
+            
+            // If there are more than one managers, we are going to 
+            // replace the one who has subordinates with the one who has not.
+            if (sumOfManagers > 1){
+                
+                // This query is going to return a table with all MANAGER_IDs along with 
+                // how many people are their subordinates. Since we know that our example 
+                // has only one Manager with subordiantes, this table is going to contain
+                // ONLY ONE ROW!!!
+                String sumOfManagerSubordinatesQUERY = "SELECT MANAGER_ID, COUNT(EMPLID) AS SUM " +
+                                                         "FROM  TEST_EMPLOYEE " + 
+                                                        "WHERE MANAGER_ID IN " + 
+                                                                        "(SELECT EMPLID " +
+                                                                           "FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " +
+                                                                          "WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " +
+                                                                                 "AND " +
+                                                                                 "TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥΘΥΝΤΗΣ%') " +
+                                                        "GROUP BY MANAGER_ID ";
+                
+                String managerWithSubordinatesID = null;
+                try{
+                    pstmt = conn.prepareStatement(sumOfManagerSubordinatesQUERY);
+                    rset = pstmt.executeQuery();
+                    
+                    
+                    while (rset.next()){
+                        managerWithSubordinatesID = rset.getString(1);
+                    }
+                    
+                    System.out.println("Manager with subordinates " + managerWithSubordinatesID);       
+                }
+                catch(SQLException se){
+                    throw se;
+                }
+                catch (Exception e){
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                }
+            
+                // Now we are going to find the id of the manager who has NO subordinates
+                
+                String newManagerIdQUERY = "SELECT EMPLID " +
+                                           "  FROM  TEST_EMPLOYEE " +
+                                           " WHERE EMPLID IN " +
+                                           "     (SELECT EMPLID " +
+                                           "       FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " + 
+                                           "      WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " +
+                                           "        AND " + 
+                                           "        TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥΘΥΝΤΗΣ%') " +  
+                                           "        AND " + 
+                                           "        EMPLID != '" + managerWithSubordinatesID + "' ";                   
+                    
+                    
+                String newManagerID= null;
+                try{
+                    pstmt = conn.prepareStatement(newManagerIdQUERY);
+                    rset = pstmt.executeQuery();
+                                    
+                                    
+                    while (rset.next()){
+                        newManagerID = rset.getString(1);
+                    }
+                                    
+                    System.out.println("New Manager ID: " +newManagerID);       
+                }
+                catch(SQLException se){
+                    throw se;
+                }
+                catch (Exception e){
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                }
+
+                // Now that we know who the Manager with the subordinates is as well as the new Manager,
+                // we are going to assign all his subordinates to the new manager
+                
+                String moveSubordinatesQUERY = "UPDATE TEST_EMPLOYEE " +
+                                               "SET MANAGER_ID = '" + newManagerID + "' " +
+                                               "WHERE MANAGER_ID = '" + managerWithSubordinatesID + "' "; 
+                
+                try{
+                    pstmt = conn.prepareStatement(moveSubordinatesQUERY);
+                    pstmt.executeUpdate();
+                }
+                
+                catch(SQLException se){
+                    throw se;
+                }
+                catch (Exception e){
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                }
+            
+                // And finally we delete the old Manager
+                String deleteOldManagerQUERY = "DELETE FROM TEST_EMPLOYEE WHERE EMPLID= '" + managerWithSubordinatesID + "' ";
+                
+                try{
+                    pstmt = conn.prepareStatement(deleteOldManagerQUERY);
+                    pstmt.executeUpdate();
+                }
+                
+                catch(SQLException se){
+                    throw se;
+                }
+                catch (Exception e){
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+            
+            
+            
+            
+        }
+        catch(SQLException se){
+            throw se;
+        }
+        
+    }
+
     public static void main(String args[]) throws SQLException {
         
         Connection conn=null;
@@ -242,6 +392,12 @@ public class JdbcMainClass {
             // Going to print out all employees list
             System.out.println(Arrays.toString(listOfAllEmployees.toArray()));
             
+            // ======================================================
+            // *** ERWTHMA 7 ***
+            // ======================================================
+            System.out.println("\nANSWER TO ERWTHMA 7: ");
+            
+            replaceManager(conn);
            
         }
         catch (SQLException e){
