@@ -26,18 +26,18 @@ public class JdbcMainClass {
     
     private static final String QUERY_2 = " SELECT * " +
                                              "FROM TEST_EMPLOYEE " +
-                                            "WHERE EMPLID=0001";
+                                            "WHERE EMPLID= ? ";
     
     private static final String QUERY_3 = "UPDATE " + 
                                                 "TEST_EMPLOYEE " + 
                                           "SET " + 
-                                                "MOBILE='2310123456' " + 
+                                                "MOBILE= ?  " + 
                                           "WHERE " + 
                                                   " EMPLID IN (SELECT EMPLID " + 
                                                   "              FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " + 
                                                   "             WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " + 
                                                   "                   AND " + 
-                                                  "             TJ.JOBCODE_DESCR='ΥΠΑΛΛΗΛΟΣ')";
+                                                  "             TJ.JOBCODE_DESCR= ?)";
 
     private static final String QUERY_4 = "SELECT * FROM TEST_EMPLOYEE";
        
@@ -71,9 +71,11 @@ public class JdbcMainClass {
      * @param conn is the Connection to the DB
      * @throws SQLException
      */
-    public static void printQueryResultTable(Connection conn, String QUERY_2) throws SQLException{
+    public static void printQueryResultTable(Connection conn, String emplid,String QUERY_2) throws SQLException{
+            
         try{
             pstmt = conn.prepareStatement(QUERY_2);
+            pstmt.setString(1, emplid);
             rset = pstmt.executeQuery();
             
             // We are going to print all column names and their values            
@@ -146,12 +148,13 @@ public class JdbcMainClass {
         return listOfEmployees;
     }
 
-    
+   private static final String QUERY = "INSERT INTO TEST_EMPLOYEE (EMPLID, JOBCODE_NUMBER, DEPTID)" + 
+                           "VALUES (?,?,?)";
     public static void insertPartialEmployeeToTable(Connection conn, Employee emp) throws SQLException{
         
-        String QUERY = "INSERT INTO TEST_EMPLOYEE (EMPLID, JOBCODE_NUMBER, DEPTID)" + 
-                       "VALUES ('" + emp.getEMPLID() + "','" + emp.getJOBCODE_NUMBER()+
-                       "','" + emp.getDEPTID() + "')";
+    String QUERY = "INSERT INTO TEST_EMPLOYEE (EMPLID, JOBCODE_NUMBER, DEPTID)" + 
+                        "VALUES ('" + emp.getEMPLID() + "','" + emp.getJOBCODE_NUMBER()+
+                        "','" + emp.getDEPTID() + "')";
         
                           // In case we want to insert all info of an employee
                           /* "VALUES ('"+ emp.getEMPLID() + "','" + emp.getFIRST_NAME() +"','" + emp.getLAST_NAME() +
@@ -165,7 +168,10 @@ public class JdbcMainClass {
         
         try{
             pstmt = conn.prepareStatement(QUERY);
-            pstmt.executeUpdate();
+            pstmt.setString(1, emp.getEMPLID());
+            pstmt.setString(2, emp.getJOBCODE_NUMBER());
+            pstmt.setString(3, emp.getDEPTID());         
+            pstmt.executeUpdate(); //TODO check return 
         }
         catch(SQLException se){
             throw se;
@@ -188,7 +194,7 @@ public class JdbcMainClass {
                                 "    FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " + 
                                 "   WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " +
                                 "         AND " +
-                                "         TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥΘΥΝΤΗΣ%') ";
+                                "         TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥ�?Υ�?ΤΗΣ%') ";
                        
         
         //System.out.println("INSERT QUERY: " + sumOfManagersQUERY + "\n");
@@ -219,7 +225,7 @@ public class JdbcMainClass {
                                                                            "FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " +
                                                                           "WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " +
                                                                                  "AND " +
-                                                                                 "TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥΘΥΝΤΗΣ%') " +
+                                                                                 "TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥ�?Υ�?ΤΗΣ%') " +
                                                         "GROUP BY MANAGER_ID ";
                 
                 String managerWithSubordinatesID = null;
@@ -251,7 +257,7 @@ public class JdbcMainClass {
                                            "       FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " + 
                                            "      WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " +
                                            "        AND " + 
-                                           "        TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥΘΥΝΤΗΣ%') " +  
+                                           "        TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥ�?Υ�?ΤΗΣ%') " +  
                                            "        AND " + 
                                            "        EMPLID != '" + managerWithSubordinatesID + "' ";                   
                     
@@ -355,7 +361,7 @@ public class JdbcMainClass {
             // *** ERWTHMA 2 ***
             // ======================================================
             System.out.println("\nANSWER TO ERWTHMA 2: ");
-            printQueryResultTable(conn, QUERY_2);
+            printQueryResultTable(conn,"0001", QUERY_2);
             
             // ======================================================
             // *** ERWTHMA 3 ***
