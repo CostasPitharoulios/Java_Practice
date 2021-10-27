@@ -90,7 +90,7 @@ public class Employee {
     // *** CONSTRUCTORS ***
     //-----------------------------------------------------------------------------------
     public Employee() {
-        this(null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    
     }
     
     public Employee(String EMPLID, String JOBCODE_NUMBER, String DEPTID){

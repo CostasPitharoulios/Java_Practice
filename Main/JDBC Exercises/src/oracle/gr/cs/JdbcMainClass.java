@@ -24,15 +24,9 @@ public class JdbcMainClass {
     private static final String QUERY_1 = "SELECT EMPLID " +
                                             "FROM TEST_EMPLOYEE";
     
-    private static final String QUERY_2 = " SELECT * " +
-                                             "FROM TEST_EMPLOYEE " +
-                                            "WHERE EMPLID= ? ";
+    private static final String QUERY_2 = " SELECT * FROM TEST_EMPLOYEE WHERE EMPLID= ? ";
     
-    private static final String QUERY_3 = "UPDATE " + 
-                                                "TEST_EMPLOYEE " + 
-                                          "SET " + 
-                                                "MOBILE= ?  " + 
-                                          "WHERE " + 
+    private static final String QUERY_3 = "UPDATE TEST_EMPLOYEE SET  MOBILE= ? WHERE " + 
                                                   " EMPLID IN (SELECT EMPLID " + 
                                                   "              FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " + 
                                                   "             WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " + 
