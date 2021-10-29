@@ -14,7 +14,8 @@ public class ConnectionUtilities {
     }
 
    // *** ENTER SECRET CODE HERE *** //
-
+    
+ 
   
     // *** END OF SECRET CODE HERE ***//
 
@@ -63,7 +64,7 @@ public class ConnectionUtilities {
         System.out.println("\nConnection is closed.");
     }
 
-    private static void closeResultSet(ResultSet rset){
+    public static void closeResultSet(ResultSet rset){
         try{
             if (rset != null){
                 rset.close();
@@ -74,7 +75,7 @@ public class ConnectionUtilities {
         }                                                            
     }
 
-    private static void closePreparedStatement(PreparedStatement pstmt) {
+    public static void closePreparedStatement(PreparedStatement pstmt) {
        try {
           if (pstmt != null)
             pstmt.close();
