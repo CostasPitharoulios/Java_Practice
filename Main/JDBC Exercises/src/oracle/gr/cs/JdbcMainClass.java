@@ -7,15 +7,24 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class JdbcMainClass {
+    
+    private static ConnectionUtilities myConnection = null;
+    
     public JdbcMainClass() {
-        super();
+        ConnectionUtilities myConnection = new ConnectionUtilities();
+    }
+    
+    public ConnectionUtilities getConnectionUtilities(){
+        return myConnection;
     }
 
     //static PreparedStatement pstmt = null;
@@ -38,7 +47,7 @@ public class JdbcMainClass {
      * @return a set of employee ids
      * @throws SQLException
      */
-    public static HashSet<String> getIdSet(Connection conn, ConnectionUtilities myConnection) throws SQLException {
+    public static Set<String> getIdSet(Connection conn) throws SQLException {
         PreparedStatement pstmt = null;
         ResultSet rset = null;
 
@@ -52,7 +61,9 @@ public class JdbcMainClass {
             *By declaring a collection using an interface type, 
             *the code would be more flexible as you can change the concrete implementation easily when needed
            */
-            HashSet<String> idSet = new HashSet<String>();
+            // - DONE -
+            Set<String> idSet = new HashSet<String>();
+            //HashSet<String> idSet = new HashSet<String>();
 
 
             while (rset.next()) {
@@ -72,8 +83,7 @@ public class JdbcMainClass {
      * @param conn is the Connection to the DB
      * @throws SQLException
      */
-    public static void printQueryResultTable(Connection conn, String emplid, String QUERY_2,
-                                             ConnectionUtilities myConnection) throws SQLException {
+    public static void printQueryResultTable(Connection conn, String emplid, String QUERY_2) throws SQLException {
 
         PreparedStatement pstmt = null;
         ResultSet rset = null;
@@ -107,8 +117,7 @@ public class JdbcMainClass {
 
     }
 
-    public static void updateEmployeeMobile(Connection conn, String QUERY_3, String JOBCODE_DESCR,
-                                            ConnectionUtilities myConnection) throws SQLException {
+    public static void updateEmployeeMobile(Connection conn, String QUERY_3, String JOBCODE_DESCR) throws SQLException {
 
         PreparedStatement pstmt = null;
         ResultSet rset = null;
@@ -136,8 +145,7 @@ public class JdbcMainClass {
 
     }
 
-    public static List<Employee> createListOfEmployees(Connection conn, String QUERY_4,
-                                                       ConnectionUtilities myConnection) throws SQLException {
+    public static List<Employee> createListOfEmployees(Connection conn) throws SQLException {
 
         PreparedStatement pstmt = null;
         ResultSet rset = null;
@@ -180,8 +188,7 @@ public class JdbcMainClass {
     private static final String insertPartialEmployeeQUERY =
         "INSERT INTO TEST_EMPLOYEE (EMPLID, JOBCODE_NUMBER, DEPTID)" + "VALUES (?,?,?)";
 
-    public static void insertPartialEmployeeToTable(Connection conn, Employee emp,
-                                                    ConnectionUtilities myConnection) throws SQLException {
+    public static void insertPartialEmployeeToTable(Connection conn, Employee emp) throws SQLException {
 
         // In case we want to insert all info of an employee
         /* "VALUES ('"+ emp.getEMPLID() + "','" + emp.getFIRST_NAME() +"','" + emp.getLAST_NAME() +
@@ -249,7 +256,7 @@ public class JdbcMainClass {
      * @param conn is the connection with the DB
      * @throws SQLException
      */
-    public static void replaceManager(Connection conn, ConnectionUtilities myConnection) throws SQLException {
+    public static void replaceManager(Connection conn) throws SQLException {
 
         //System.out.println("INSERT QUERY: " + sumOfManagersQUERY + "\n");
         PreparedStatement pstmt_1 = null;
@@ -387,8 +394,11 @@ public class JdbcMainClass {
 
         Connection conn = null;
         
+        
         //TODO ConnectionUtilities should be a class variable and initialized only once, when the class is initialized
-        ConnectionUtilities myConnection = new ConnectionUtilities();
+        // - DONE(?) - 
+        //ConnectionUtilities myConnection = new ConnectionUtilities();
+        myConnection = new ConnectionUtilities();
 
         try {
 
@@ -409,21 +419,21 @@ public class JdbcMainClass {
 
             // Getting a set of employee ids and printing its content
             //System.out.println(getIdSet(conn));
-            HashSet<String> idSet = getIdSet(conn, myConnection);
+            Set<String> idSet = getIdSet(conn);
             idSet.forEach((n) -> System.out.println("Employee id: " + n)); // Using Java Lambda Expressions
             System.out.println("");
             // ======================================================
             // *** ERWTHMA 2 ***
             // ======================================================
             System.out.println("\nANSWER TO ERWTHMA 2: ");
-            printQueryResultTable(conn, "0001", QUERY_2, myConnection);
+            printQueryResultTable(conn, "0001", QUERY_2);
 
             // ======================================================
             // *** ERWTHMA 3 ***
             // ======================================================
             System.out.println("\nANSWER TO ERWTHMA 3: ");
-            updateEmployeeMobile(conn, QUERY_3, "’–¡ÀÀ«Àœ”", myConnection);
-            printQueryResultTable(conn, "0001", QUERY_2, myConnection);
+            updateEmployeeMobile(conn, QUERY_3, "’–¡ÀÀ«Àœ”");
+            printQueryResultTable(conn, "0001", QUERY_2);
 
 
             // ======================================================
@@ -431,7 +441,7 @@ public class JdbcMainClass {
             // ======================================================
 
             System.out.println("\nANSWER TO ERWTHMA 4&5: ");
-            List<Employee> listOfAllEmployees = createListOfEmployees(conn, QUERY_4, myConnection);
+            List<Employee> listOfAllEmployees = createListOfEmployees(conn);
 
             // Going to print out all employees list
             System.out.println(Arrays.toString(listOfAllEmployees.toArray()));
@@ -440,17 +450,18 @@ public class JdbcMainClass {
             // *** ERWTHMA 6 ***
             // ======================================================
             System.out.println("\nANSWER TO ERWTHMA 6: ");
-            Employee newEmployee = new Employee("0005", "11", "3504");
+            Employee newEmployee = new Employee("0006", "11", "3504");
 
             // Updating BD Employee Table
-            insertPartialEmployeeToTable(conn, newEmployee, myConnection);
+            insertPartialEmployeeToTable(conn, newEmployee);
 
             // Creating a list with all the employees just to make sure
             // that the update was successful.
             System.out.println("\nANSWER TO ERWTHMA 6: ");
             
             //TODO query_4 is a class variable , so it is reduntant to pass as a method variable 
-            listOfAllEmployees = createListOfEmployees(conn, QUERY_4, myConnection);
+            // - DONE -
+            listOfAllEmployees = createListOfEmployees(conn);
 
             // Going to print out all employees list
             System.out.println(Arrays.toString(listOfAllEmployees.toArray()));
@@ -460,7 +471,7 @@ public class JdbcMainClass {
             // ======================================================
             System.out.println("\nANSWER TO ERWTHMA 7: ");
 
-            replaceManager(conn, myConnection);
+            replaceManager(conn);
 
         } catch (SQLException e) {
             System.out.println("An exception was caught.");
