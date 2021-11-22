@@ -20,21 +20,23 @@ import java.util.Set;
 
 
 public class JdbcMainClass {
-    
+
     private static ConnectionUtilities myConnection = null;
-    
+
     public JdbcMainClass() {
-        ConnectionUtilities myConnection = new ConnectionUtilities();
+        //22-11-2021 here this is unnecessary. You are initializing a static object a second time.
+        //22-11-2021 I am commenting it out.
+        // ConnectionUtilities myConnection = new ConnectionUtilities();
     }
-    
-    public ConnectionUtilities getConnectionUtilities(){
+
+    public ConnectionUtilities getConnectionUtilities() {
         return myConnection;
     }
 
     //static PreparedStatement pstmt = null;
     //static ResultSet rset = null;
 
-    private static final String QUERY_1 = "SELECT EMPLID " + "FROM TEST_EMPLOYEE";
+    private static final String QUERY_1 = "SELECT EMPLID FROM TEST_EMPLOYEE";
 
     private static final String QUERY_2 = " SELECT * FROM TEST_EMPLOYEE WHERE EMPLID= ? ";
 
@@ -55,32 +57,33 @@ public class JdbcMainClass {
         PreparedStatement pstmt = null;
         ResultSet rset = null;
 
+        // Creating a hashset to store all employee ids
+        /** **********TODO it is better to declare like this: (always the declaration should be an interface)
+        *Set<String> idSet = new HashSet<String>();
+        *By declaring a collection using an interface type,
+        *the code would be more flexible as you can change the concrete implementation easily when needed
+        */
+        // - DONE -
+        Set<String> idSet = new HashSet<String>();
+        //HashSet<String> idSet = new HashSet<String>();
+        
         try {
             pstmt = conn.prepareStatement(QUERY_1);
-            rset = pstmt.executeQuery();
-
-            // Creating a hashset to store all employee ids
-            /** **********TODO it is better to declare like this: (always the declaration should be an interface)
-            *Set<String> idSet = new HashSet<String>();
-            *By declaring a collection using an interface type, 
-            *the code would be more flexible as you can change the concrete implementation easily when needed
-           */
-            // - DONE -
-            Set<String> idSet = new HashSet<String>();
-            //HashSet<String> idSet = new HashSet<String>();
-
+            rset = pstmt.executeQuery();       
 
             while (rset.next()) {
                 idSet.add(rset.getString("EMPLID"));
             }
-
-            return idSet;
+           
         } catch (SQLException se) {
             throw se;
         } finally {
             myConnection.closeResultSet(rset);
             myConnection.closePreparedStatement(pstmt);
         }
+        
+        //22-11-2021 the object to be returned should be outside of the try-catch statement
+        return idSet;
     }
 
     /** This function gets a query and prints all the table's column names along with the resulting values.
@@ -231,7 +234,7 @@ public class JdbcMainClass {
     private static final String sumOfManagersQUERY =
         "SELECT COUNT(EMPLID) AS SUMOFMANAGERS " + "FROM " + "(SELECT * " +
         "    FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " + "   WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " +
-        "         AND " + "         TJ.JOBCODE_DESCR LIKE '%ΥΠΑΛΛΗΛΟΣ%') ";
+        "         AND " + "         TJ.JOBCODE_DESCR LIKE '%ΥΠΑΛΛΗΛ�?Σ%') ";
 
 
     // This query is going to return a table with all MANAGER_IDs along with
@@ -241,14 +244,15 @@ public class JdbcMainClass {
     private static final String sumOfManagerSubordinatesQUERY =
         "SELECT MANAGER_ID, COUNT(EMPLID) AS SUM " + "FROM  TEST_EMPLOYEE " + "WHERE MANAGER_ID IN " +
         "(SELECT EMPLID " + "FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " +
-        "WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " + "AND " + "TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥΘΥΝΤΗΣ%') " +
+        "WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " + "AND " + "TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥ�?Υ�?ΤΗΣ%') " +
         "GROUP BY MANAGER_ID ";
 
     // Finds the id of the manager who has no subordinates
     private static final String newManagerIdQUERY =
         "SELECT EMPLID " + "  FROM  TEST_EMPLOYEE " + " WHERE EMPLID IN " + "     (SELECT EMPLID " +
         "       FROM TEST_EMPLOYEE TE, TEST_JOBCODES TJ " + "      WHERE TE.JOBCODE_NUMBER = TJ.JOBCODE_NUMBER " +
-        "        AND " + "        TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥΘΥΝΤΗΣ%') " + "        AND " + "        EMPLID != ? ";
+        "        AND " + "        TJ.JOBCODE_DESCR LIKE '%ΔΙΕΥ�?Υ�?ΤΗΣ%') " + "        AND " +
+        "        EMPLID != ? ";
 
     private static final String moveSubordinatesQUERY =
         "UPDATE TEST_EMPLOYEE " + "SET MANAGER_ID = ? " + "WHERE MANAGER_ID = ? ";
@@ -393,14 +397,13 @@ public class JdbcMainClass {
         }
 
     }
-    
-    private static final String findUserGroupAndMechanismsQUERY = "SELECT EMPLID, GROUP_NAME, MECHANISM " + 
-                                                                    "FROM TEST_USER_GROUP_MAP UGM, TEST_GROUPS G " + 
-                                                                   "WHERE UGM.GROUP_CODE = G.GROUP_CODE AND " + 
-                                                                          "EMPLID = ? ";
-    
+
+    private static final String findUserGroupAndMechanismsQUERY =
+        "SELECT EMPLID, GROUP_NAME, MECHANISM " + "FROM TEST_USER_GROUP_MAP UGM, TEST_GROUPS G " +
+        "WHERE UGM.GROUP_CODE = G.GROUP_CODE AND " + "EMPLID = ? ";
+
     public static void findUserGroupAndMechanism(Connection conn, String emplid) throws SQLException {
-        
+
         PreparedStatement pstmt = null;
         ResultSet rset = null;
 
@@ -417,7 +420,7 @@ public class JdbcMainClass {
                     if (i > 1)
                         System.out.print(",  ");
                     String columnValue = rset.getString(i);
-                    System.out.print(rsmd.getColumnName(i) + ": " + columnValue );
+                    System.out.print(rsmd.getColumnName(i) + ": " + columnValue);
                 }
                 System.out.println("");
             }
@@ -430,21 +433,17 @@ public class JdbcMainClass {
             myConnection.closeResultSet(rset);
             myConnection.closePreparedStatement(pstmt);
         }
-        
+
     }
-    
-    private static final String findUserRolesQUERY = "SELECT TE.EMPLID, TR.ROLE_CODE, TR.ROLE_DESCRIPTION " +
-                                                                    "FROM TEST_EMPLOYEE TE, TEST_JOBCODES JC, TEST_JOBCODE_ROLE_MAP JRM, TEST_ROLE TR " + 
-                                                                   "WHERE TE.JOBCODE_NUMBER = JC.JOBCODE_NUMBER " + 
-                                                                         "AND " +
-                                                                          "JC.JOBCODE_NUMBER = JRM.JOBCODE_NUMBER " +
-                                                                         "AND " +
-                                                                          "JRM.ROLE_CODE = TR.ROLE_CODE " +
-                                                                         "AND " +
-                                                                            "EMPLID = ?";
-    
+
+    private static final String findUserRolesQUERY =
+        "SELECT TE.EMPLID, TR.ROLE_CODE, TR.ROLE_DESCRIPTION " +
+        "FROM TEST_EMPLOYEE TE, TEST_JOBCODES JC, TEST_JOBCODE_ROLE_MAP JRM, TEST_ROLE TR " +
+        "WHERE TE.JOBCODE_NUMBER = JC.JOBCODE_NUMBER " + "AND " + "JC.JOBCODE_NUMBER = JRM.JOBCODE_NUMBER " + "AND " +
+        "JRM.ROLE_CODE = TR.ROLE_CODE " + "AND " + "EMPLID = ?";
+
     public static void findUserRoles(Connection conn, String emplid) throws SQLException {
-        
+
         PreparedStatement pstmt = null;
         ResultSet rset = null;
 
@@ -461,7 +460,7 @@ public class JdbcMainClass {
                     if (i > 1)
                         System.out.print(",  ");
                     String columnValue = rset.getString(i);
-                    System.out.print(rsmd.getColumnName(i) + ": " + columnValue );
+                    System.out.print(rsmd.getColumnName(i) + ": " + columnValue);
                 }
                 System.out.println("");
             }
@@ -474,25 +473,18 @@ public class JdbcMainClass {
             myConnection.closeResultSet(rset);
             myConnection.closePreparedStatement(pstmt);
         }
-        
+
     }
-    
-    private static final String findUserGroupsQUERY = " SELECT TE.EMPLID, TG.GROUP_NAME " + 
-                                                        "FROM TEST_EMPLOYEE TE, TEST_JOBCODES JC, TEST_JOBCODE_ROLE_MAP JRM, TEST_ROLE TR, TEST_ROLE_GROUPS RG, TEST_GROUPS TG " + 
-                                                        "WHERE TE.JOBCODE_NUMBER = JC.JOBCODE_NUMBER " + 
-                                                        "    AND " + 
-                                                        "    JC.JOBCODE_NUMBER = JRM.JOBCODE_NUMBER " + 
-                                                        "    AND " + 
-                                                        "    JRM.ROLE_CODE = TR.ROLE_CODE " + 
-                                                        "    AND " + 
-                                                        "    TR.ROLE_CODE = RG.ROLE_CODE " + 
-                                                        "    AND " + 
-                                                        "    RG.GROUP_CODE = TG.GROUP_CODE " + 
-                                                        "    AND " +                                                 
-                                                        "    TE.EMPLID = ? ";
-    
+
+    private static final String findUserGroupsQUERY =
+        " SELECT TE.EMPLID, TG.GROUP_NAME " +
+        "FROM TEST_EMPLOYEE TE, TEST_JOBCODES JC, TEST_JOBCODE_ROLE_MAP JRM, TEST_ROLE TR, TEST_ROLE_GROUPS RG, TEST_GROUPS TG " +
+        "WHERE TE.JOBCODE_NUMBER = JC.JOBCODE_NUMBER " + "    AND " + "    JC.JOBCODE_NUMBER = JRM.JOBCODE_NUMBER " +
+        "    AND " + "    JRM.ROLE_CODE = TR.ROLE_CODE " + "    AND " + "    TR.ROLE_CODE = RG.ROLE_CODE " +
+        "    AND " + "    RG.GROUP_CODE = TG.GROUP_CODE " + "    AND " + "    TE.EMPLID = ? ";
+
     public static void findUserGroups(Connection conn, String emplid) throws SQLException {
-        
+
         PreparedStatement pstmt = null;
         ResultSet rset = null;
 
@@ -509,7 +501,7 @@ public class JdbcMainClass {
                     if (i > 1)
                         System.out.print(",  ");
                     String columnValue = rset.getString(i);
-                    System.out.print(rsmd.getColumnName(i) + ": " + columnValue );
+                    System.out.print(rsmd.getColumnName(i) + ": " + columnValue);
                 }
                 System.out.println("");
             }
@@ -522,18 +514,17 @@ public class JdbcMainClass {
             myConnection.closeResultSet(rset);
             myConnection.closePreparedStatement(pstmt);
         }
-        
+
     }
-    
-    
+
 
     public static void main(String args[]) throws SQLException {
 
         Connection conn = null;
-        
-        
+
+
         //TODO ConnectionUtilities should be a class variable and initialized only once, when the class is initialized
-        // - DONE - 
+        // - DONE -
         //ConnectionUtilities myConnection = new ConnectionUtilities();
         myConnection = new ConnectionUtilities();
 
@@ -570,24 +561,24 @@ public class JdbcMainClass {
             // *** ERWTHMA 3 ***
             // ======================================================
             System.out.println("\nANSWER TO ERWTHMA 3: ");
-            updateEmployeeMobile(conn, QUERY_3, "ΥΠΑΛΛΗΛΟΣ");
+            updateEmployeeMobile(conn, QUERY_3, "ΥΠΑΛΛΗΛ�?Σ");
             printQueryResultTable(conn, "0001", QUERY_2);
 
-            
+
             System.setProperty("file.encoding","UTF-8");
             Field charset = Charset.class.getDeclaredField("defaultCharset");
             charset.setAccessible(true);
             charset.set(null,null);
-            
-            System.out.println("THIS IS ENGLISH AND THIS IS GREEK: ΓΙΑ ΝΑ ΔΟΥΜΕ");
-            
+
+            System.out.println("THIS IS ENGLISH AND THIS IS GREEK: ΓΙΑ �?Α Δ�?Υ�?Ε");
+
             System.out.println(Charset.defaultCharset());
-            
-            
+
+
             // ======================================================
             // *** ERWTHMA 4 & 5 ***
             // ======================================================
-            
+
             System.out.println("\nANSWER TO ERWTHMA 4&5: ");
             List<Employee> listOfAllEmployees = createListOfEmployees(conn);
 
@@ -606,8 +597,8 @@ public class JdbcMainClass {
             // Creating a list with all the employees just to make sure
             // that the update was successful.
             System.out.println("\nANSWER TO ERWTHMA 6: ");
-            
-            //TODO query_4 is a class variable , so it is reduntant to pass as a method variable 
+
+            //TODO query_4 is a class variable , so it is reduntant to pass as a method variable
             // - DONE -
             listOfAllEmployees = createListOfEmployees(conn);
 
@@ -621,32 +612,32 @@ public class JdbcMainClass {
 
             replaceManager(conn);
             */
-            
+
             // ======================================================
             //          >>> PART 2 <<<
             //         *** ERWTHMA 1 ***
             // ======================================================
             System.out.println("\nANSWER TO ERWTHMA PART_2-1: ");
-            
+
             findUserGroupAndMechanism(conn, "0001");
-            
+
             // ======================================================
             //          >>> PART 2 <<<
             //         *** ERWTHMA 2 ***
             // ======================================================
             System.out.println("\nANSWER TO ERWTHMA PART_2-2: ");
-            
+
             findUserRoles(conn, "0003");
-            
+
             // ======================================================
             //          >>> PART 2 <<<
             //         *** ERWTHMA 3 ***
             // ======================================================
             System.out.println("\nANSWER TO ERWTHMA PART_2-3: ");
-            
+
             findUserGroups(conn, "0003");
-            
-            
+
+
         } catch (SQLException e) {
             System.out.println("An exception was caught.");
             e.printStackTrace();
