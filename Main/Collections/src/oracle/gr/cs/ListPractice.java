@@ -66,6 +66,7 @@ public class ListPractice {
                 }
                 System.out.println("");*/
                 
+                //TODO ******* please get the String with column name and not a number.
                 employeeGroupsList.add(rset.getString(1));
             }
         } catch (SQLException se) {
@@ -83,6 +84,8 @@ public class ListPractice {
     }
     
     public static HashMap<String,List<String>> deepCopyHashMap(Map<String,List<String>> originalHashMap){
+    //TODO *** just observation this can be done with lambda stream much more quicker.
+    
         HashMap<String,List<String>> newHashMap = new  HashMap<>();
         for (Map.Entry<String, List<String>> entry : originalHashMap.entrySet()){
             newHashMap.put(entry.getKey(), new ArrayList<>(entry.getValue()));
