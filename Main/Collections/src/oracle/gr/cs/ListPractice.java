@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import oracle.dms.util.CollectionUtils;
 
 public class ListPractice {
     public ListPractice() {
